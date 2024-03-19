@@ -19,3 +19,6 @@ const dataSlice = createSlice({
         }
     }
 })
+
+export const { addplan } = dataSlice.actions
+export default dataSlice.reducer
