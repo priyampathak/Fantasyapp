@@ -6,7 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 export default function Home({ navigation }) {
   const [uname, setUname] = useState('user');
   const [matches, setMatches] = useState([]);
-  
   useEffect(() => {
     const getdata = async () => {
       try {
@@ -36,31 +35,6 @@ export default function Home({ navigation }) {
     };
     fetchData();
   }, []);
-
-  const handleAddMatch = async () => {
-    try {
-      // Create a separate match entry for each selected date
-      Object.keys(selectedDates).forEach(dateString => {
-        const newMatch = {
-          teamA,
-          teamB,
-          days: dateString,
-          time: selectedTime,
-          stadium
-        };
-        setMatches(prevMatches => [...prevMatches, newMatch]);
-        AsyncStorage.setItem('matches', JSON.stringify([...matches, newMatch]));
-      });
-
-      setTeamA('');
-      setTeamB('');
-      setSelectedDates({});
-      setSelectedTime(null);
-      setStadium('');
-    } catch (error) {
-      console.error('Error adding match:', error);
-    }
-  };
 
   return (
     <View style={{marginHorizontal:responsiveWidth(6), marginVertical:responsiveHeight(0)}}>
@@ -118,11 +92,11 @@ export default function Home({ navigation }) {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <View style={{ borderWidth: 1, marginVertical: responsiveHeight(1), padding: responsiveWidth(2), borderRadius: 5 }}>
-              <Text style={{color:'black'}}>{`Team A: ${item.teamA}`}</Text>
-              <Text style={{color:'black'}}>{`Team B: ${item.teamB}`}</Text>
-              <Text style={{color:'black'}}>{`Date: ${item.days}`}</Text>
-              <Text style={{color:'black'}}>{`Time: ${item.time}`}</Text>
-              <Text style={{color:'black'}}>{`Stadium: ${item.stadium}`}</Text>
+              <Text>{`Team A: ${item.teamA}`}</Text>
+              <Text>{`Team B: ${item.teamB}`}</Text>
+              <Text>{`Date: ${item.days}`}</Text>
+              <Text>{`Time: ${item.time}`}</Text>
+              <Text>{`Stadium: ${item.stadium}`}</Text>
             </View>
           )}
         />
