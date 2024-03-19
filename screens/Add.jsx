@@ -10,6 +10,57 @@ export default function Add() {
   const [selectedDates, setSelectedDates] = useState({});
   const [selectedTime, setSelectedTime] = useState('');
   const [stadium, setStadium] = useState('');
+  const [matches, setMatches] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const existingMatches = await AsyncStorage.getItem('matches');
+        if (existingMatches) {
+          setMatches(JSON.parse(existingMatches));
+        }
+      } catch (error) {
+        console.error('Error fetching matches:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const markDisabledDates = () => {
+    let disabledDates = {};
+    matches.forEach(match => {
+      if (match.time === selectedTime) {
+        disabledDates[match.days] = { disabled: true, disableTouchEvent: true, dotColor: 'grey' };
+      }
+    });
+    return disabledDates;
+  };
+
+  const handleAddMatch = async () => {
+    try {
+      const newMatches = Object.keys(selectedDates).map(dateString => ({
+        teamA,
+        teamB,
+        days: dateString,
+        time: selectedTime,
+        stadium
+      }));
+
+      const updatedMatches = [...matches, ...newMatches];
+      setMatches(updatedMatches);
+
+      await AsyncStorage.setItem('matches', JSON.stringify(updatedMatches));
+
+      setTeamA('');
+      setTeamB('');
+      setSelectedDates({});
+      setSelectedTime('');
+      setStadium('');
+    } catch (error) {
+      console.error('Error adding match:', error);
+    }
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -43,7 +94,26 @@ export default function Add() {
           onChangeText={setSelectedTime}
           placeholderTextColor='grey'
         />
-
+        <View style={{ marginVertical: responsiveHeight(1), height:responsiveHeight(48) }}>
+          <Text style={{ fontSize: responsiveFontSize(2), marginBottom: responsiveHeight(1), color:'black'}}>Select Dates:</Text>
+          <Calendar
+            markedDates={{ ...selectedDates, ...markDisabledDates() }}
+            onDayPress={(day) => {
+              const selectedDatesCopy = { ...selectedDates };
+              if (selectedDatesCopy[day.dateString]) {
+                delete selectedDatesCopy[day.dateString];
+              } else {
+                selectedDatesCopy[day.dateString] = { selected: true };
+              }
+              setSelectedDates(selectedDatesCopy);
+            }}
+            theme={{
+              // Calendar theme settings...
+            }}
+            style={{ borderRadius: 10 }}
+          />
+        </View>
+        <Button title='Add Match' onPress={handleAddMatch} />
       </View>
       
     </View>

@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 export default function Home({ navigation }) {
   const [uname, setUname] = useState('user');
   const [matches, setMatches] = useState([]);
+  const [upc, setUpc] = useState(null)
   
   useEffect(() => {
     const getdata = async () => {
@@ -62,6 +63,31 @@ export default function Home({ navigation }) {
     }
   };
 
+  useEffect(() => {
+    if (matches.length > 0) {
+      // Get the current date and time
+      const currentDate = new Date();
+      // Sort matches by date and time
+      const sortedMatches = [...matches].sort((a, b) => {
+        const dateA = new Date(a.days + ' ' + a.time);
+        const dateB = new Date(b.days + ' ' + b.time);
+        return dateA - dateB;
+      });
+      // Find the closest upcoming match
+      const upcomingMatch = sortedMatches.find(match => {
+        const matchDate = new Date(match.days + ' ' + match.time);
+        return matchDate > currentDate;
+      });
+    //   // Log the closest upcoming match
+     
+     setUpc(upcomingMatch)
+     if(upc!=null){
+        console.log('Closest upcoming match:', upc.days);
+     }
+     
+    }
+  }, [matches]);
+
   return (
     <View style={{marginHorizontal:responsiveWidth(6), marginVertical:responsiveHeight(0)}}>
         <View style={{flexDirection:'row', marginVertical:responsiveHeight(2), justifyContent:'space-between'}}>
@@ -82,9 +108,9 @@ export default function Home({ navigation }) {
         <View style={{height:responsiveHeight(22), backgroundColor:'#3854DC', borderRadius:10, paddingVertical:responsiveHeight(1),
                 paddingHorizontal:responsiveWidth(6), marginVertical:responsiveHeight(2)}}>
             <Text style={{color:'white', textAlign:'center', marginBottom:responsiveHeight(2), fontWeight:'800'}}>
-                17 Mar
+                {upc?.days ?? 'Date'}
             </Text>
-            <View style={{flexDirection:'row', marginBottom:responsiveHeight(0.4)}}>
+            <View style={{flexDirection:'row', marginBottom:responsiveHeight(0.4), }}>
                 <Text style={{flex:1, color: 'white', fontWeight:'800'}}>
                     Team A
                 </Text>
@@ -93,21 +119,21 @@ export default function Home({ navigation }) {
                     Team B
                 </Text>   
             </View>
-            <View style={{flexDirection:'row', justifyContent:'space-between', }}>
+            <View style={{flexDirection:'row', justifyContent:'space-between', height:responsiveHeight(5)}}>
                 <Text style={{ color: 'white', fontWeight:'200', width:responsiveWidth(20),}}>
-                    Mumbai Indians
+                    {upc?.teamA ?? 'Name of A'}
                 </Text>
                 
                 <Text style={{textAlign:'right', color: 'white', fontWeight:'200', width:responsiveWidth(20)}}>
-                    Lucknow Supergiants
+                    {upc?.teamB ?? 'Name of B'}
                 </Text>   
             </View>
             <View style={{paddingVertical:responsiveHeight(1.5)}}>
                 <Text style={{textAlign:'center', color:'white', fontWeight:'300'}}>
-                    Wankhede Stadium Mumbai
+                    {upc?.stadium ?? ''}
                 </Text>
                 <Text style={{textAlign:'center', color:'white', fontStyle:'italic', fontWeight:'800'}}>
-                    3:00 PM onwards
+                {upc?.time ?? ''} onwards
                 </Text>
             </View>
         </View>
