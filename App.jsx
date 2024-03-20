@@ -6,6 +6,7 @@ import Home from './screens/Home'
 import Add from './screens/Add'
 import Splash from './screens/Splash'
 import Aftersplash from './screens/Aftersplash'
+import Manage from './screens/Manage'
 
 export default function App() {
   const stack = createNativeStackNavigator()
@@ -17,6 +18,7 @@ export default function App() {
           <stack.Screen name='Home' component={Home} options={{ headerShown: false }}/>
           <stack.Screen name="Aftersplash" component={Aftersplash} options={{headerShown: false}} />
           <stack.Screen name='Add' component={Add}/>
+          <stack.Screen name='Manage' component={Manage} />
         </stack.Navigator>
       </NavigationContainer>
     </>

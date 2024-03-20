@@ -38,30 +38,35 @@ export default function Home({ navigation }) {
     fetchData();
   }, []);
 
-  const handleAddMatch = async () => {
-    try {
-      // Create a separate match entry for each selected date
-      Object.keys(selectedDates).forEach(dateString => {
-        const newMatch = {
-          teamA,
-          teamB,
-          days: dateString,
-          time: selectedTime,
-          stadium
-        };
-        setMatches(prevMatches => [...prevMatches, newMatch]);
-        AsyncStorage.setItem('matches', JSON.stringify([...matches, newMatch]));
-      });
-
-      setTeamA('');
-      setTeamB('');
-      setSelectedDates({});
-      setSelectedTime(null);
-      setStadium('');
-    } catch (error) {
-      console.error('Error adding match:', error);
-    }
+  const handleItemPress = (item) => {
+    // Navigate to Manage Screen with item data
+    navigation.navigate('Manage', { matchData: item });
   };
+
+//   const handleAddMatch = async () => {
+//     try {
+//       // Create a separate match entry for each selected date
+//       Object.keys(selectedDates).forEach(dateString => {
+//         const newMatch = {
+//           teamA,
+//           teamB,
+//           days: dateString,
+//           time: selectedTime,
+//           stadium
+//         };
+//         setMatches(prevMatches => [...prevMatches, newMatch]);
+//         AsyncStorage.setItem('matches', JSON.stringify([...matches, newMatch]));
+//       });
+
+//       setTeamA('');
+//       setTeamB('');
+//       setSelectedDates({});
+//       setSelectedTime(null);
+//       setStadium('');
+//     } catch (error) {
+//       console.error('Error adding match:', error);
+//     }
+//   };
 
   useEffect(() => {
     if (matches.length > 0) {
@@ -87,6 +92,8 @@ export default function Home({ navigation }) {
      
     }
   }, [matches]);
+
+  
 
   return (
     <View style={{marginHorizontal:responsiveWidth(6), marginVertical:responsiveHeight(0)}}>
@@ -124,7 +131,7 @@ export default function Home({ navigation }) {
                     {upc?.teamA ?? 'Name of A'}
                 </Text>
                 
-                <Text style={{textAlign:'right', color: 'white', fontWeight:'200', width:responsiveWidth(20)}}>
+                <Text style={{textAlign:'right', color: 'white', fontWeight:'200', width:responsiveWidth(26)}}>
                     {upc?.teamB ?? 'Name of B'}
                 </Text>   
             </View>
@@ -137,19 +144,21 @@ export default function Home({ navigation }) {
                 </Text>
             </View>
         </View>
-        <View style={{ height:responsiveHeight(60), marginHorizontal: responsiveWidth(0.2) }}>
+        <View style={{ height:responsiveHeight(60), marginHorizontal: responsiveWidth(0.2) }} >
         <Text style={{ fontSize: responsiveFontSize(2), color: 'black', marginTop: responsiveHeight(2) }}>Upcoming Matches</Text>
         <FlatList
           data={matches}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
-            <View style={{ borderWidth: 1, marginVertical: responsiveHeight(1), padding: responsiveWidth(2), borderRadius: 5 }}>
-              <Text style={{color:'black'}}>{`Team A: ${item.teamA}`}</Text>
-              <Text style={{color:'black'}}>{`Team B: ${item.teamB}`}</Text>
-              <Text style={{color:'black'}}>{`Date: ${item.days}`}</Text>
-              <Text style={{color:'black'}}>{`Time: ${item.time}`}</Text>
-              <Text style={{color:'black'}}>{`Stadium: ${item.stadium}`}</Text>
-            </View>
+            <TouchableOpacity onPress={() => handleItemPress(item)}>
+                <View style={{ borderWidth: 1, marginVertical: responsiveHeight(1), padding: responsiveWidth(2), borderRadius: 5 }}>
+                <Text style={{color:'black'}}>{`Team A: ${item.teamA}`}</Text>
+                <Text style={{color:'black'}}>{`Team B: ${item.teamB}`}</Text>
+                <Text style={{color:'black'}}>{`Date: ${item.days}`}</Text>
+                <Text style={{color:'black'}}>{`Time: ${item.time}`}</Text>
+                <Text style={{color:'black'}}>{`Stadium: ${item.stadium}`}</Text>
+                </View>
+            </TouchableOpacity>
           )}
         />
       </View>
