@@ -1,6 +1,8 @@
-import { View, Text } from 'react-native'
+import { View, Text, Image } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { responsiveHeight, responsiveWidth } from 'react-native-responsive-dimensions';
+
 
 export default function Splash({ navigation }) {
     const [uname, setUname] = useState('user');
@@ -27,8 +29,8 @@ export default function Splash({ navigation }) {
       }, [navigation]); 
     
   return (
-    <View>
-      <Text>Splash</Text>
+    <View style={{ flex:1, alignContent:'center', justifyContent:'center', alignItems:'center', backgroundColor:'white'}}>
+        <Image source={require('../assets/logo.jpg')} style={{height:responsiveHeight(60), width:responsiveWidth(60)}} />
     </View>
   )
 }

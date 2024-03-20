@@ -40,16 +40,35 @@ export default function ManageScreen({ route, navigation }) {
 
   // Function to handle deletion
   const handleDelete = async () => {
-    try {
-      const updatedMatches = matches.filter(match => !(match.days === matchData.days && match.time === matchData.time));
-      setMatches(updatedMatches);
-      await AsyncStorage.setItem('matches', JSON.stringify(updatedMatches));
-      Alert.alert('Success', 'Match deleted successfully');
-      navigation.goBack();
-    } catch (error) {
-      console.error('Error deleting match:', error);
-      Alert.alert('Error', 'An error occurred while deleting the match');
-    }
+    Alert.alert(
+      'Confirm Deletion',
+      'Are you sure you want to delete this match?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: async () => {
+            try {
+              const updatedMatches = matches.filter(
+                match => !(match.days === matchData.days && match.time === matchData.time)
+              );
+              setMatches(updatedMatches);
+              await AsyncStorage.setItem('matches', JSON.stringify(updatedMatches));
+              Alert.alert('Success', 'Match deleted successfully');
+              navigation.goBack();
+            } catch (error) {
+              console.error('Error deleting match:', error);
+              Alert.alert('Error', 'An error occurred while deleting the match');
+            }
+          },
+          style: 'destructive',
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   // Function to handle modification
