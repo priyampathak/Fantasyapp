@@ -38,7 +38,7 @@ export default function ManageScreen({ route, navigation }) {
     return disabledDates;
   };
 
-  // Function to handle deletion
+  
   const handleDelete = async () => {
     Alert.alert(
       'Confirm Deletion',
@@ -122,7 +122,7 @@ export default function ManageScreen({ route, navigation }) {
           <Calendar
             markedDates={{ [matchData.days]: { selected: true }, ...markDisabledDates() }}
             theme={{
-              // Calendar theme settings...
+             
             }}
             style={{ borderRadius: 10 }}
           />

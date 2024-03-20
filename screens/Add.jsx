@@ -108,7 +108,7 @@ export default function Add() {
               setSelectedDates(selectedDatesCopy);
             }}
             theme={{
-              // Calendar theme settings...
+             
             }}
             style={{ borderRadius: 10 }}
           />
